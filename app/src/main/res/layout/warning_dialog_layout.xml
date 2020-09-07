@@ -1,0 +1,98 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_frame_white"
+    android:padding="2dp"
+    android:focusableInTouchMode="true">
+
+    <TextView
+        android:id="@+id/title2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/padding_15"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/padding_5"
+        android:text="@string/are_you_sure"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/colorPrimaryDark"
+        style="@style/Bold"
+        android:textSize="@dimen/glyph_icon_size_big"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/padding_15"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/padding_5"
+        android:layout_below="@id/title2"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/medium_text_size"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:visibility="gone">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLength="@dimen/max_text_length"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/small_text_size"
+            android:typeface="normal"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/message_for_user"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/textField"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/padding_20"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/message_for_user"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:visibility="visible"
+            android:id="@+id/negative_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:padding="@dimen/padding_15"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/small_text_size"/>
+
+        <TextView
+            android:id="@+id/separator2"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#CCCCCC"
+            android:gravity="center_horizontal"
+            />
+
+        <TextView
+            android:id="@+id/positive_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="top"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/padding_15"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/small_text_size"
+            style="@style/Bold"/>
+    </LinearLayout>
+</RelativeLayout>

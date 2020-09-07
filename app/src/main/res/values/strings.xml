@@ -1,3 +1,48 @@
 <resources>
     <string name="app_name">Firestore-Sample</string>
+
+    <string name="order_accepted">Order accepted</string>
+    <string name="order_rejected">Order cancelled</string>
+    <string name="order_preparing">Food is being prepared</string>
+    <string name="order_prepared">Your order is prepared</string>
+    <string name="order_on_the_way">Courier is on the way</string>
+    <string name="order_arrived">Food arrived. Time to eat</string>
+    <string name="order_returned">Order returned</string>
+    <string name="track_order">Track</string>
+    <string name="order_details">Details</string>
+    <string name="you_are_here">You are here</string>
+    <string name="contact_support">Support</string>
+    <string name="cancel_order">Cancel</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="i_am_sure">I am sure</string>
+    <string name="your_order_should_be_prepared_in">Remaining preparation time</string>
+    <string name="your_order_will_be_canceled">Your order is going to be canceled. No fees will be charged.</string>
+    <string name="order_is_in_progress">The order is being prepared, you can cancel it if it didn\'t arrive in time</string>
+    <string name="initial_total_price">Initial total price</string>
+    <string name="discount">Discount</string>
+    <string name="delivery_fee">Delivery fee</string>
+    <string name="paid_with_loyalty">Paid with loyalty</string>
+    <string name="order_total_price">Net price</string>
+    <string name="cannot_cancel_order">Cannot cancel order</string>
+    <string name="no_thanks">No, thanks</string>
+
+    <string name="image_description">image</string>
+    <string name="order_number"># %1$d</string>
+    <string name="Integer" translatable="false">%d</string>
+    <string name="minus_float" translatable="false">- %f</string>
+    <string name="with_extras">Extras :</string>
+    <string name="extras">Extras</string>
+    <string name="supplements">Supplements</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="items_quantity" translatable="false">x%d</string>
+    <string name="extra_quantity" translatable="false">%dx%s</string>
+    <string name="without_ingredients">Without</string>
+
+    <string-array name="vehicles">
+        <item>not identified</item>
+        <item>Car</item>
+        <item>Scooter</item>
+        <item>Bicycle</item>
+        <item>Walking</item>
+    </string-array>
 </resources>
