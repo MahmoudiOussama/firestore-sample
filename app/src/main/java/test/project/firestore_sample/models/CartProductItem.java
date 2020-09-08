@@ -90,12 +90,12 @@ public class CartProductItem implements Serializable {
     public void setIngredients(Map<String, Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
-
+    @com.google.firebase.firestore.PropertyName("item_price")
     @PropertyName("item_price")
     public double getItemPrice() {
         return itemPrice;
     }
-
+    @com.google.firebase.firestore.PropertyName("item_price")
     @PropertyName("item_price")
     public void setItemPrice(double itemPrice) {
         this.itemPrice = itemPrice;
@@ -108,12 +108,12 @@ public class CartProductItem implements Serializable {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-
+    @com.google.firebase.firestore.PropertyName("total_item_price")
     @PropertyName("total_item_price")
     public double getTotalItemPrice() {
         return totalItemPrice;
     }
-
+    @com.google.firebase.firestore.PropertyName("total_item_price")
     @PropertyName("total_item_price")
     public void setTotalItemPrice(double totalItemPrice) {
         this.totalItemPrice = totalItemPrice;

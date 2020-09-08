@@ -79,6 +79,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import test.project.firestore_sample.MainActivity;
 import test.project.firestore_sample.OrderDetailsFragment;
 import test.project.firestore_sample.R;
 
@@ -131,33 +132,10 @@ public class Utils {
             return numberFormat.format(priceValue);
         } catch (Exception ex) {
             FirebaseCrashlytics.getInstance().recordException(ex);
-            if (isMenutiumFlavor()) {
-                return formatPriceUsingCountryData(priceValue, displayCurrency);
-            } else {
-                numberFormat = NumberFormat.getCurrencyInstance(new Locale(Locale.getDefault().getLanguage()));
-                return numberFormat.format(priceValue);
-            }
-        }
-    }
 
-    public static String formatPriceUsingCountryData(double priceValue, boolean displayCurrency) {
-        //make sure to init the Price Formatter
-        /*if (Constants.customPricesFormatter == null) {
-            Constants.createCustomPricesFormat();
+            numberFormat = NumberFormat.getCurrencyInstance(new Locale(Locale.getDefault().getLanguage()));
+            return numberFormat.format(priceValue);
         }
-        //Make sure currency to init currency value
-        if (Constants.country == null) {
-            Constants.country = new Country();
-            Constants.country.setCurrency(BasicActivity.currency);
-        } else if (TextUtils.isEmpty(Constants.country.getCurrency())) {
-            Constants.country.setCurrency(BasicActivity.currency);
-        }
-
-        return displayCurrency
-                ? Constants.customPricesFormatter.format(roundPriceToChosenScale(priceValue, Constants.country.getDecimalPointDigits())) + " " + Constants.country.getCurrency()
-                : Constants.customPricesFormatter.format(roundPriceToChosenScale(priceValue, Constants.country.getDecimalPointDigits()));
-         */
-        return "";
     }
 
     public static void setPreference(Context context, String key, String value) {
@@ -246,7 +224,7 @@ public class Utils {
                             Bundle params = new Bundle();
                             try {
                                 params.putString("store_name", "My Store");
-                                params.putString("user_id", OrderDetailsFragment.USER_PROFILE_ID);
+                                params.putString("user_id", Constants.USER_PROFILE_ID);
                                 Utils.incrementCounter(Constants.STORES_PROFILES+"/"+"STORE_ID", Constants.PHONE_CALL_COUNT, 1, null);
                                 FirebaseAnalytics.getInstance(Objects.requireNonNull(mActivity)).logEvent("phone_call_click", params);
                             } catch (Exception ignored) {}
@@ -260,7 +238,7 @@ public class Utils {
                             Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(Constants.TEL + phone));
                             mActivity.startActivity(intent);
                         } else {
-                            ((BasicActivity) mActivity).displayMessage(mActivity.getString(R.string.needs_sim_card), R.color.yellow_message, Constants.TIME_TWO_SECONDS);
+                            ((MainActivity) mActivity).displayMessage(R.string.needs_sim_card, android.R.color.holo_orange_light, Constants.TIME_TWO_SECONDS);
                         }
                     } catch (SecurityException e) {
                         FirebaseCrashlytics.getInstance().recordException(e);
@@ -269,7 +247,7 @@ public class Utils {
                             ActivityCompat.requestPermissions(mActivity,
                                     new String[]{android.Manifest.permission.CALL_PHONE}, Constants.EIGHT);
                         } else {
-                            ((BasicActivity) mActivity).displayMessage(mActivity.getString(R.string.needs_sim_card), R.color.yellow_message, Constants.TIME_TWO_SECONDS);
+                            ((MainActivity) mActivity).displayMessage(R.string.needs_sim_card, android.R.color.holo_orange_light, Constants.TIME_TWO_SECONDS);
                         }
                     }
                     finalPhoneCallPopup.dismiss();
@@ -353,8 +331,8 @@ public class Utils {
 
     //Method used to increment a counter in the database
     public static void incrementCounter(String branch, String attribute, int step, String databaseUrl) {
-        DatabaseReference mDatabase = (databaseUrl == null) ? Constants.dbRef() : Constants.dbRef(databaseUrl);
-        mDatabase.child(branch)
+        Constants.dbRef()
+                .child(branch)
                 .child(attribute)
                 .runTransaction(new com.google.firebase.database.Transaction.Handler() {
                     @NonNull

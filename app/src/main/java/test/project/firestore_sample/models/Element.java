@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.Map;
 
-import project.iobird.menutiumandroid.controls.Constants;
+import test.project.firestore_sample.controls.Constants;
 
 @SuppressWarnings("SameParameterValue")
 public class Element implements Serializable {
@@ -80,12 +80,12 @@ public class Element implements Serializable {
     public void setPrice(double price) {
         this.price = price;
     }
-
+    @com.google.firebase.database.PropertyName("extras_title")
     @PropertyName("extras_title")
     public String getExtrasTitle() {
         return extrasTitle;
     }
-
+    @com.google.firebase.database.PropertyName("extras_title")
     @PropertyName("extras_title")
     public void setExtrasTitle(String extrasTitle) {
         this.extrasTitle = extrasTitle;
@@ -114,22 +114,22 @@ public class Element implements Serializable {
     public void setMax(Integer max) {
         this.max = max;
     }
-
+    @com.google.firebase.database.PropertyName("min_extras")
     @PropertyName("min_extras")
     public Integer getMinExtras() {
         return minExtras;
     }
-
+    @com.google.firebase.database.PropertyName("min_extras")
     @PropertyName("min_extras")
     public void setMinExtras(Integer minExtras) {
         this.minExtras = minExtras;
     }
-
+    @com.google.firebase.database.PropertyName("max_extras")
     @PropertyName("max_extras")
     public Integer getMaxExtras() {
         return maxExtras;
     }
-
+    @com.google.firebase.database.PropertyName("max_extras")
     @PropertyName("max_extras")
     public void setMaxExtras(Integer maxExtras) {
         this.maxExtras = maxExtras;

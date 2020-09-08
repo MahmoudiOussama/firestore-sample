@@ -31,7 +31,7 @@ public class FireStoreOrder implements Serializable{
     private String storeName;
     @Expose
     @SerializedName("total_price")
-    private double totalPrice;
+    private Double totalPrice;
     //under orders
     @Expose
     @SerializedName("total_discount")
@@ -87,7 +87,7 @@ public class FireStoreOrder implements Serializable{
     private String currency;
     @Expose
     @SerializedName("paid_with_loyalty")
-    private double paidWithLoyalty;
+    private Double paidWithLoyalty;
     @Expose
     @SerializedName("delivery_fee")
     private Double deliveryFee;
@@ -96,10 +96,10 @@ public class FireStoreOrder implements Serializable{
     private Integer tableNumber;
     @Expose
     @SerializedName("order_number")
-    private int orderNumber;
+    private Integer orderNumber;
     @Expose
     @SerializedName("distance")
-    private double distance;
+    private Double distance;
     @Expose
     @SerializedName("app_name")
     private String appName;
@@ -132,25 +132,25 @@ public class FireStoreOrder implements Serializable{
     private List<String> audience;
     @Expose
     @SerializedName("comments_count")
-    private int commentsCount;
+    private Integer commentsCount;
     @Expose
     @SerializedName("hearts_count")
-    private int heartsCount;
+    private Integer heartsCount;
     @Expose
     @SerializedName("hearts_ids")
     private List<String> heartsIds;
     @Expose
     @SerializedName("is_public")
-    private boolean isPublic;
+    private Boolean isPublic;
     @Expose
     @SerializedName("is_friends")
-    private boolean isFriends;
+    private Boolean isFriends;
     @Expose
     @SerializedName("is_private")
-    private boolean isPrivate;
+    private Boolean isPrivate;
     @Expose
     @SerializedName("is_visible")
-    private boolean isVisible;
+    private Boolean isVisible;
     @Expose
     @SerializedName("user_photo")
     private String userPhoto;
@@ -215,11 +215,11 @@ public class FireStoreOrder implements Serializable{
         this.storeName = storeName;
     }
     @PropertyName("total_price")
-    public double getTotalPrice() {
+    public Double getTotalPrice() {
         return totalPrice;
     }
     @PropertyName("total_price")
-    public void setTotalPrice(double totalPrice) {
+    public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
     }
 
@@ -344,12 +344,12 @@ public class FireStoreOrder implements Serializable{
     }
 
     @PropertyName("paid_with_loyalty")
-    public double getPaidWithLoyalty() {
+    public Double getPaidWithLoyalty() {
         return paidWithLoyalty;
     }
 
     @PropertyName("paid_with_loyalty")
-    public void setPaidWithLoyalty(double paidWithLoyalty) {
+    public void setPaidWithLoyalty(Double paidWithLoyalty) {
         this.paidWithLoyalty = paidWithLoyalty;
     }
 
@@ -402,30 +402,30 @@ public class FireStoreOrder implements Serializable{
     }
 
     @PropertyName("order_number")
-    public int getOrderNumber() {
+    public Integer getOrderNumber() {
         return orderNumber;
     }
 
     @PropertyName("order_number")
-    public void setOrderNumber(int orderNumber) {
+    public void setOrderNumber(Integer orderNumber) {
         this.orderNumber = orderNumber;
     }
 
     @PropertyName("table_number")
-    public int getTableNumber() {
+    public Integer getTableNumber() {
         return tableNumber;
     }
 
     @PropertyName("table_number")
-    public void setTableNumber(int tableNumber) {
+    public void setTableNumber(Integer tableNumber) {
         this.tableNumber = tableNumber;
     }
 
-    public double getDistance() {
+    public Double getDistance() {
         return distance;
     }
 
-    public void setDistance(double distance) {
+    public void setDistance(Double distance) {
         this.distance = distance;
     }
 
@@ -445,7 +445,7 @@ public class FireStoreOrder implements Serializable{
     }
 
     @Exclude
-    public void setItemsCount(byte itemsCount) {
+    public void setItemsCount(int itemsCount) {
         this.itemsCount = itemsCount;
     }
 
@@ -468,22 +468,22 @@ public class FireStoreOrder implements Serializable{
     }
 
     @PropertyName("comments_count")
-    public int getCommentsCount() {
+    public Integer getCommentsCount() {
         return commentsCount;
     }
 
     @PropertyName("comments_count")
-    public void setCommentsCount(int commentsCount) {
+    public void setCommentsCount(Integer commentsCount) {
         this.commentsCount = commentsCount;
     }
 
     @PropertyName("hearts_count")
-    public int getHeartsCount() {
+    public Integer getHeartsCount() {
         return heartsCount;
     }
 
     @PropertyName("hearts_count")
-    public void setHeartsCount(int heartsCount) {
+    public void setHeartsCount(Integer heartsCount) {
         this.heartsCount = heartsCount;
     }
 
@@ -498,42 +498,42 @@ public class FireStoreOrder implements Serializable{
     }
 
     @PropertyName("is_public")
-    public boolean isPublic() {
+    public Boolean isPublic() {
         return isPublic;
     }
 
     @PropertyName("is_public")
-    public void setPublic(boolean aPublic) {
+    public void setPublic(Boolean aPublic) {
         isPublic = aPublic;
     }
 
     @PropertyName("is_friends")
-    public boolean isFriends() {
+    public Boolean isFriends() {
         return isFriends;
     }
 
     @PropertyName("is_friends")
-    public void setFriends(boolean friends) {
+    public void setFriends(Boolean friends) {
         isFriends = friends;
     }
 
     @PropertyName("is_private")
-    public boolean isPrivate() {
+    public Boolean isPrivate() {
         return isPrivate;
     }
 
     @PropertyName("is_private")
-    public void setPrivate(boolean aPrivate) {
+    public void setPrivate(Boolean aPrivate) {
         isPrivate = aPrivate;
     }
 
     @PropertyName("is_visible")
-    public boolean isVisible() {
+    public Boolean isVisible() {
         return isVisible;
     }
 
     @PropertyName("is_visible")
-    public void setVisible(boolean visible) {
+    public void setVisible(Boolean visible) {
         isVisible = visible;
     }
 

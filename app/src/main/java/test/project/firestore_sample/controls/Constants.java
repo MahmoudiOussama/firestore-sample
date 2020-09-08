@@ -12,6 +12,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import test.project.firestore_sample.R;
 
@@ -25,13 +26,12 @@ public class Constants {
     public final static String TIMESTAMP              = "timestamp";
     public static final String DISCUSSION_ID          = "discussion_id";
     public static final String ORDER_ID               = "order_id";
+    public static final String USER_PROFILE_ID = "2Bz8euUmPgMqc4Z7QZWJjLfsgV72";
 
     /** Numbers */
     public static final short MINUS_ONE                   = -1;
     public static final short ZERO                        = 0;
     public static final short ONE                         = 1;
-    public static final short TWO                         = 2;
-    public static final short THREE                       = 3;
     public static final short EIGHT                       = 8;
     public static final short TIME_THREE_HUNDRED_MILLIS   = 300;
     public static final short TIME_ONE_SECOND             = 1000;
@@ -39,8 +39,6 @@ public class Constants {
     public static final short TIME_SIX_SECONDS            = 6000;
     public static final int   TIME_ONE_MINUTE             = 60000;
     public static final short MAP_CAMERA_PADDING          = 100;
-    public static final int   ONE_THOUSAND                = 1000;
-    public static final int   ONE_MILLION                 = 1000000;
 
     /** Words */
     public static final String NEW                        = "new";
@@ -53,20 +51,12 @@ public class Constants {
     public static final String DELIVERED                  = "delivered";
     public static final String RETURNED                   = "returned";
     public static final String DELIVERY                   = "delivery";
-    public static final String TIME_FORMAT                = "hh:mm a Z";
-    public static final String DAY_FORMAT                 = "EEEE";
     public static final String EMPTY                      = "  ";
     public static final String TEL                        = "tel:";
     public static final String STATUS                     = "status";
     public static final String COORDINATES                = "coordinates";
-    public static final String REGEX_PHONE_TN             = "^(?:00216|\\+216)*[0-9]{8}";
     public static final String VEHICLE                    = "vehicle";
-    public static final String COUNTRY_CODE               = "+216";
-    public static final String SKIP_PROTECTED_APP_CHECK   = "skipProtectedAppCheck";
     public static final String UNKNOWN                    = "Unknown";
-    public static final String K                          = "K";
-    public static final String M                          = "M";
-    public static final String DEFAULT                    = "default";
 
     /** Database  */
     public static final String STORES_LOCATIONS           = "stores_locations";
@@ -80,9 +70,6 @@ public class Constants {
     /** FireStore*/
     public static final String COLLECTION_ORDERS          = "orders";
 
-    public static final String PREFERENCE_COUNTRY         = "COUNTRY";
-    public static final String PREFERENCE_LEVEL_ONE_ZONE  = "LEVEL_ONE_ZONE";
-    public static final String PREFERENCE_LEVEL_TWO_ZONE  = "LEVEL_TWO_ZONE";
 
     public static DisplayMetrics getScreenSize(Context context) {
         // Get Screen size as Pixels
@@ -129,8 +116,16 @@ public class Constants {
         return new Pair<>(dpWidth, dpHeight);
     }
 
-    public static DatabaseReference dbRef(String databaseUrl) {
-        return FirebaseDatabase.getInstance(databaseUrl).getReference();
+    public static DatabaseReference dbRef() {
+        return FirebaseDatabase.getInstance().getReference();
+    }
+
+    public static FirebaseFirestore firebaseFirestore;
+    public static FirebaseFirestore getFireStoreInstance() {
+        if (firebaseFirestore == null) {
+            firebaseFirestore = FirebaseFirestore.getInstance();
+        }
+        return firebaseFirestore;
     }
 
     public enum GlideQuality {

@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 
-import project.iobird.menutiumandroid.controls.Constants;
+import test.project.firestore_sample.controls.Constants;
 
 public class Ingredient implements Serializable, Comparable<Ingredient> {
     @Expose

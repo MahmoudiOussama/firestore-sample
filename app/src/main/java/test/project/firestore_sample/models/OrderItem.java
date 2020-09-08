@@ -10,8 +10,8 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.Map;
 
-import project.iobird.menutiumandroid.controls.Constants;
-import project.iobird.menutiumandroid.controls.Utils;
+import test.project.firestore_sample.controls.Constants;
+import test.project.firestore_sample.controls.Utils;
 
 @SuppressWarnings("unused")
 public class OrderItem implements Serializable {
@@ -35,7 +35,7 @@ public class OrderItem implements Serializable {
     private double price = Constants.ZERO;
     @Expose
     @SerializedName("quantity")
-    private int quantity = Constants.ONE;
+    private Integer quantity = (int)Constants.ONE;
     @Expose
     @SerializedName("category_id")
     private String categoryId;
@@ -158,11 +158,11 @@ public class OrderItem implements Serializable {
         this.price = price;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

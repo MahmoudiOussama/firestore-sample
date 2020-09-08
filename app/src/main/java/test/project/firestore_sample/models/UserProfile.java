@@ -89,11 +89,12 @@ public class UserProfile implements Serializable {
     public void setPhoto(Image photo) {
         this.photo = photo;
     }
-
+    @com.google.firebase.database.PropertyName("birthdate")
     @PropertyName("birthdate")
     public Date getBirthDate() {
         return birthDate;
     }
+    @com.google.firebase.database.PropertyName("birthdate")
     @PropertyName("birthdate")
     public void setBirthDate(Object birthDate) {
         if (birthDate instanceof Long) {
@@ -120,40 +121,42 @@ public class UserProfile implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
-
+    @com.google.firebase.database.PropertyName("last_location")
     @PropertyName("last_location")
     public String getLastLocation() {
         return lastLocation;
     }
-
+    @com.google.firebase.database.PropertyName("last_location")
     @PropertyName("last_location")
     public void setLastLocation(String lastLocation) {
         this.lastLocation = lastLocation;
     }
-
+    @com.google.firebase.database.PropertyName("orders_count")
     @PropertyName("orders_count")
     public HashMap<String, Integer> getOrdersCount() {
         return ordersCount;
     }
+    @com.google.firebase.database.PropertyName("orders_count")
     @PropertyName("orders_count")
     public void setOrdersCount(HashMap<String, Integer> ordersCount) {
         this.ordersCount = ordersCount;
     }
-
+    @com.google.firebase.database.PropertyName("orders_share_scope")
     @PropertyName("orders_share_scope")
     public String getOrdersShareScope() {
         return ordersShareScope;
     }
-
+    @com.google.firebase.database.PropertyName("orders_share_scope")
     @PropertyName("orders_share_scope")
     public void setOrdersShareScope(String ordersShareScope) {
         this.ordersShareScope = ordersShareScope;
     }
-
+    @com.google.firebase.database.PropertyName("last_payment_type")
     @PropertyName("last_payment_type")
     public String getLastPaymentType() {
         return lastPaymentType;
     }
+    @com.google.firebase.database.PropertyName("last_payment_type")
     @PropertyName("last_payment_type")
     public void setLastPaymentType(String lastPaymentType) {
         this.lastPaymentType = lastPaymentType;

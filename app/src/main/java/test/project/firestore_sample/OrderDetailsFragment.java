@@ -32,9 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.Date;
@@ -69,13 +67,10 @@ public class OrderDetailsFragment extends Fragment
     private static final String KEY_STORE_ID     = "storeId";
     private static final String KEY_ORDER_ID     = "orderId";
     private static final String KEY_STORE_NAME   = "store name";
-    private static final String KEY_CURRENCY     = "currency";
     private static final String KEY_ORDER_NUMBER = "order_number";
 
-    public static final String USER_PROFILE_ID = "2Bz8euUmPgMqc4Z7QZWJjLfsgV72";
-
     private View mView;
-    private String storeId, orderId, storeName, storeCurrency;
+    private String storeId, orderId, storeName;
     private ValueEventListener courierPositionListener;
     private ProgressBar progressBar;
     private ScrollView trackingLayout;
@@ -89,15 +84,13 @@ public class OrderDetailsFragment extends Fragment
     private TextView buttonContactSupport, buttonCancelOrder, buttonTrackOrder;
     private int orderNumber, deliveryTime = 90;
     private ListenerRegistration orderRealtimeListener;
-    private FirebaseFirestore mFireStoreInstance;
 
-    public static OrderDetailsFragment newInstance(String storeId, String orderId, String storeName, String storeCurrency, int orderNumber) {
+    public static OrderDetailsFragment newInstance(String storeId, String orderId, String storeName, int orderNumber) {
         OrderDetailsFragment fragment = new OrderDetailsFragment();
         Bundle args = new Bundle();
         args.putString(KEY_STORE_ID, storeId);
         args.putString(KEY_ORDER_ID, orderId);
         args.putString(KEY_STORE_NAME, storeName);
-        args.putString(KEY_CURRENCY, storeCurrency);
         args.putInt(KEY_ORDER_NUMBER, orderNumber);
         fragment.setArguments(args);
         return fragment;
@@ -110,16 +103,10 @@ public class OrderDetailsFragment extends Fragment
         mView = inflater.inflate(R.layout.order_details_layout, container, false);
 
         if (getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
-            if (getActivity().getIntent().getExtras().containsKey(Constants.DISCUSSION_ID)) {
-                //String id = getActivity().getIntent().getExtras().getString(Constants.DISCUSSION_ID);
-                //goToChatView(null);
-            }
-
             if (getActivity().getIntent().getExtras().containsKey(Constants.ORDER_ID)) {
                 getActivity().getIntent().removeExtra(Constants.ORDER_ID);
             }
         }
-
         return mView;
     }
 
@@ -127,9 +114,6 @@ public class OrderDetailsFragment extends Fragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         savedState = savedInstanceState;
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(false).build();
-        mFireStoreInstance = FirebaseFirestore.getInstance();
-        mFireStoreInstance.setFirestoreSettings(settings);
         buttonCancelOrder = view.findViewById(R.id.button_cancel_order);
         buttonContactSupport = view.findViewById(R.id.button_support);
         buttonTrackOrder = view.findViewById(R.id.button_track_order);
@@ -138,7 +122,6 @@ public class OrderDetailsFragment extends Fragment
             storeId = (storeId == null) ? getArguments().getString(KEY_STORE_ID) : storeId;
             orderId = (orderId == null) ? getArguments().getString(KEY_ORDER_ID) : orderId;
             storeName = (storeName == null) ? getArguments().getString(KEY_STORE_NAME) : storeName;
-            storeCurrency = (storeCurrency == null) ? getArguments().getString(KEY_CURRENCY) : storeCurrency;
             orderNumber = getArguments().getInt(KEY_ORDER_NUMBER);
         }
 
@@ -153,25 +136,19 @@ public class OrderDetailsFragment extends Fragment
         buttonCancelOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (countDownView.getVisibility() == View.VISIBLE ) {
-                    if (getActivity() != null) {
-                        ((MainActivity) getActivity()).displayMessage(R.string.order_is_in_progress, android.R.color.holo_red_light, Constants.TIME_SIX_SECONDS);
-                    }
-                    //} else if (mOrder != null && !(mOrder.getStatus().equals(Constants.RECEIVED) || mOrder.getStatus().equals(Constants.IN_PROGRESS) || (mOrder.getStatus().equals(Constants.VALIDATED) && mOrder.getOrderType().equals(Constants.DELIVERY)))) {
-                } else*/ if (mOrder != null && (!mOrder.getStatus().equals(Constants.RECEIVED))) {
+                if (mOrder != null && (!mOrder.getStatus().equals(Constants.RECEIVED))) {
                     if (getActivity() != null) {
                         ((MainActivity) getActivity()).displayMessage(R.string.cannot_cancel_order, android.R.color.holo_red_light, Constants.TIME_SIX_SECONDS);
                     }
                 } else {
-                    //progressBar.setVisibility(View.VISIBLE);
                     Utils.createAlertDialog(getActivity(), getString(R.string.your_order_will_be_canceled), getString(R.string.i_am_sure), getString(R.string.no_thanks), R.layout.warning_dialog_layout, new Callable<Void>() {
                         @Override
                         public Void call() throws Exception {
-                            mFireStoreInstance.runTransaction(new com.google.firebase.firestore.Transaction.Function<Void>() {
+                            Constants.getFireStoreInstance().runTransaction(new com.google.firebase.firestore.Transaction.Function<Void>() {
                                 @Nullable
                                 @Override
                                 public Void apply(@NonNull com.google.firebase.firestore.Transaction transaction) throws FirebaseFirestoreException {
-                                    DocumentReference ref = mFireStoreInstance.collection(Constants.COLLECTION_ORDERS).document(orderId);
+                                    DocumentReference ref = Constants.getFireStoreInstance().collection(Constants.COLLECTION_ORDERS).document(orderId);
                                     DocumentSnapshot snapshot = transaction.get(ref);
                                     FireStoreOrder order = snapshot.toObject(FireStoreOrder.class);
                                     if (order != null && order.getStatus() != null && (order.getStatus().equals(Constants.RECEIVED))) {
@@ -202,8 +179,8 @@ public class OrderDetailsFragment extends Fragment
         buttonContactSupport.setOnClickListener(new OnSingleClickListener() {
             @Override
             protected void onSingleClick() {
-                buttonContactSupport.setEnabled(false);
-                getOrCreateDiscussion();
+                //buttonContactSupport.setEnabled(false);
+                //getOrCreateDiscussion();
             }
         });
 
@@ -225,164 +202,7 @@ public class OrderDetailsFragment extends Fragment
                 } catch (Exception ignored) {}
             }
         });
-
-        //create the order status real time listener
-        /*Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            if (statusUpdatesListener == null) {
-                orderStatusChangesListener();
-            }
-        }, Constants.TIME_HALF_SECOND);*/
     }
-
-    private void getOrCreateDiscussion() {
-        /*progressBar.setVisibility(View.VISIBLE);
-        //check for existing discussion
-        mFireStoreInstance.collection(Constants.COLLECTION_DISCUSSIONS)
-                .document(orderId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult() != null && task.getResult().exists()) {
-                                // The discussion already exists
-                                Discussion discussion = task.getResult().toObject(Discussion.class);
-                                goToChatView(discussion);
-                            } else {
-                                // The discussion does not exist, the firestore order document will be fetched and the discussion will be created
-                                //check for existing order
-                                mFireStoreInstance.collection(Constants.COLLECTION_ORDERS)
-                                        .document(orderId)
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                if (task.isSuccessful()) {
-                                                    if (task.getResult() != null && task.getResult().exists()) {
-                                                        List<DiscussionMember> members = new ArrayList<>();
-                                                        DocumentSnapshot snapshot = task.getResult();
-                                                        String storeId = snapshot.getString(Constants.STORE_ID);
-                                                        String deliveryPartnerId = snapshot.getString(Constants.DELIVERY_PARTNER_ID);
-                                                        String deliveryPartnerName = snapshot.getString(Constants.DELIVERY_PARTNER_NAME);
-                                                        // Add the user to the discussion members
-                                                        String userName = snapshot.getString(Constants.USER_NAME);
-                                                        String firebasePhotoUrl = (Authentication.getCurrentUser().getPhotoUrl() == null) ? null : Authentication.getCurrentUser().getPhotoUrl().toString();
-                                                        members.add(new DiscussionMember(FirebaseAuth.getInstance().getUid(), userName, Constants.CUSTOMER, (currentUserProfile.getPhoto() != null) ? currentUserProfile.getPhoto().getUrl() : firebasePhotoUrl));
-                                                        // Add the admin to the discussion members
-                                                        members.add(new DiscussionMember(getString(R.string.admin_authentication_id), getString(R.string.app_name), Constants.ADMIN, (null)));
-
-                                                        // Add the restaurant owner to the discussion members
-                                                        FirebaseDatabase.getInstance().getReference()
-                                                                .child(Constants.ADMINS)
-                                                                .orderByChild(storeId)
-                                                                .limitToLast(Constants.ONE)
-                                                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                    @Override
-                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                        if (dataSnapshot.getValue() != null) {
-                                                                            for (DataSnapshot ownerSnapshot : dataSnapshot.getChildren()) {
-                                                                                members.add(new DiscussionMember(ownerSnapshot.getKey(), snapshot.getString(Constants.STORE_NAME), Constants.RESTAURANT, null));
-                                                                                break;
-                                                                            }
-                                                                        }
-                                                                        // Add the delivery partner owner, if exists, to the discussion members
-                                                                        if (deliveryPartnerId != null) {
-                                                                            FirebaseDatabase.getInstance().getReference()
-                                                                                    .child(Constants.DELIVERY_PARTNERS)
-                                                                                    .orderByChild(deliveryPartnerId)
-                                                                                    .limitToLast(1)
-                                                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                                        @Override
-                                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                                            if (dataSnapshot.getValue() != null) {
-                                                                                                for (DataSnapshot deliverySnapshot : dataSnapshot.getChildren()) {
-                                                                                                    members.add(new DiscussionMember(deliverySnapshot.getKey(), deliveryPartnerName, Constants.DELIVERY_PARTNER, null));
-                                                                                                    break;
-                                                                                                }
-                                                                                            }
-                                                                                            createDiscussion(members, orderId);
-                                                                                        }
-
-                                                                                        @Override
-                                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                                                            showDiscussionErrorMessage();
-                                                                                        }
-                                                                                    });
-                                                                        } else {
-                                                                            // Start conversation
-                                                                            createDiscussion(members, orderId);
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                                        showDiscussionErrorMessage();
-                                                                    }
-                                                                });
-                                                    } else {
-                                                        // No order document for this order
-                                                        showDiscussionErrorMessage();
-                                                    }
-                                                } else {
-                                                    showDiscussionErrorMessage();
-                                                }
-                                            }
-                                        });
-                            }
-                        } else {
-                            showDiscussionErrorMessage();
-                        }
-                    }
-                });
-         */
-    }
-
-    /*private void createDiscussion(List<DiscussionMember> members, String orderId) {
-        List<String> usersIds = new ArrayList<>();
-        for (DiscussionMember member : members) {
-            usersIds.add(member.getId());
-        }
-        Discussion discussion = new Discussion(orderId, usersIds, members);
-        mFireStoreInstance.collection(Constants.COLLECTION_DISCUSSIONS)
-                .document(orderId)
-                .set(discussion)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            goToChatView(discussion);
-                        } else {
-                            showDiscussionErrorMessage();
-                        }
-                    }
-                });
-    }*/
-
-    /*private void goToChatView(Discussion discussion) {
-        if (buttonContactSupport != null) {
-            buttonContactSupport.setEnabled(true);
-        }
-        if (getActivity() != null) {
-            ChatFragment fragment = ChatFragment.newInstance(discussion);
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.slide_in_appear, R.anim.slide_in_disappear, R.anim.slide_away_appear, R.anim.slide_away_disappear)
-                    .replace(R.id.drawer_container, fragment)
-                    .addToBackStack(null)
-                    .commitAllowingStateLoss();
-        }
-        if (progressBar != null) {
-            progressBar.setVisibility(View.GONE);
-        }
-    }
-
-    private void showDiscussionErrorMessage() {
-        buttonContactSupport.setEnabled(true);
-        if (getActivity() != null) {
-            ((MainActivity) getActivity()).displayMessage(R.string.cannot_load_discussion, R.color.android.R.color.holo_red_light, Constants.TIME_SIX_SECONDS);
-        }
-        progressBar.setVisibility(View.GONE);
-    }*/
 
     @Override
     public void onResume() {
@@ -423,6 +243,11 @@ public class OrderDetailsFragment extends Fragment
         try {
             ((MainActivity) Objects.requireNonNull(getActivity())).hideMessage();
         } catch (Exception ignored) {}
+
+        try {
+            orderRealtimeListener.remove();
+        } catch (Exception ignored) {}
+        orderRealtimeListener = null;
         super.onPause();
     }
 
@@ -492,7 +317,7 @@ public class OrderDetailsFragment extends Fragment
                 }
             }
             firstTimeOrderListener = true;
-            orderRealtimeListener = mFireStoreInstance.collection(Constants.COLLECTION_ORDERS)
+            orderRealtimeListener = Constants.getFireStoreInstance().collection(Constants.COLLECTION_ORDERS)
                     .document(orderId)
                     .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                         @Override
@@ -511,12 +336,10 @@ public class OrderDetailsFragment extends Fragment
                                             if (!TextUtils.isEmpty(mOrder.getOrderType())) {
                                                 createTrackingView(mOrder);
                                             }
-
                                             //Calculate item price for each product
                                             for (OrderItem orderItem : mOrder.extractMealsList()) {
                                                 orderItem.calculateItemPrice();
                                             }
-
                                             //Initialize listView instance.
                                             RecyclerView recyclerView = mView.findViewById(R.id.products_recyclerView);
                                             recyclerView.setLayoutManager(new WrapContentLinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -524,16 +347,12 @@ public class OrderDetailsFragment extends Fragment
                                             DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                                                     LinearLayoutManager.VERTICAL);
                                             recyclerView.addItemDecoration(dividerItemDecoration);
-
                                             //Create adapter for displaying products as a list.
                                             CartAdapter adapter = new CartAdapter(getContext(), mOrder.extractMealsList(), Constants.CHECK);
-
                                             //assign adapter to previously created recyclerView.
                                             recyclerView.setAdapter(adapter);
 
                                             displayOrderPriceDetails(mOrder);
-                                            /**((TextView) mView.findViewById(R.id.products_count)).setText(getString(R.string.items_count, mOrder.getItemsCount()));
-                                             ((TextView) mView.findViewById(R.id.total_price)).setText(Utils.displayPrice(mOrder.getTotalPrice(), true, mOrder.getCountryID()));*/
                                         }
 
                                         if (firstTimeOrderListener || !mOrder.getStatus().equals(previousStatus)) {
@@ -674,6 +493,7 @@ public class OrderDetailsFragment extends Fragment
                                             buttonContactSupport.setVisibility(View.VISIBLE);
                                         }*/
                                     } catch (Exception e) {
+                                        e.printStackTrace();
                                         FirebaseCrashlytics.getInstance().recordException(e);
                                     }
                                 }
@@ -699,7 +519,6 @@ public class OrderDetailsFragment extends Fragment
             mView.findViewById(R.id.state_5).setVisibility(View.GONE);
         }
     }
-
 
     private void getStoreDeliveryTime() {
         FirebaseDatabase.getInstance().getReference()
@@ -737,12 +556,6 @@ public class OrderDetailsFragment extends Fragment
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
         }
-    }
-
-    private long getRemainingPreparationTime() {
-        long startTime = (mOrder.getInProgressAt() != null) ? mOrder.getInProgressAt().getTime()
-                : (mOrder.getValidatedAt() != null ? mOrder.getValidatedAt().getTime() : mOrder.getUpdatedAt().getTime());
-        return (startTime + deliveryTime*Constants.TIME_ONE_MINUTE) - (System.currentTimeMillis() - MainActivity.timeDifferenceFromServer);
     }
 
     private void updateStatusTextView(int statusViewId, int messageValueId, int iconDrawableId) {
@@ -842,9 +655,7 @@ public class OrderDetailsFragment extends Fragment
             getCourierProfile();
 
             getDrivenVehicle();
-        }/* else {
-            getOrderFromDatabase(storeId, orderId, false);
-        }*/
+        }
     }
 
     //Setting up mapview object
@@ -896,25 +707,6 @@ public class OrderDetailsFragment extends Fragment
                                 FirebaseCrashlytics.getInstance().recordException(e);
                             }
 
-                            /*Disabled to prevent usage of Google Places API and decrease the charged money*/
-                            //Needs to create the route line between the client and the store.
-                            /*if (googlePlacesThread == null) {
-                                //create direction url
-                                if (clientPosition.toLatLng() != null && restaurantPosition != null) {
-                                    String url = Utils.getDirectionsUrl(clientPosition.toLatLng(), restaurantPosition, MainActivity.mapAPIKey);
-                                    //Start downloading json data from Google Directions API
-                                    googlePlacesThread = new Utils.DownloadTask(false);
-                                    googlePlacesThread.execute(url, Constants.URL_DIRECTIONS);
-                                    googlePlacesThread.setDownloadListener(() -> {
-                                        if (routeToStore != null) {
-                                            routeToStore.remove();
-                                        }
-                                        if (googlePlacesThread.lineOptions != null) {
-                                            routeToStore = googleMap.addPolyline(googlePlacesThread.lineOptions);
-                                        }
-                                    });
-                                }
-                            }*/
                             if (trackingLayout.getVisibility() == View.VISIBLE) {
                                 createCameraBoundsAndMoveCamera();
                             }
@@ -1081,46 +873,6 @@ public class OrderDetailsFragment extends Fragment
                     }
                 });
     }
-
-    /*private void checkAlreadyRatedOrder() {
-        if (mOrder.getDeliveryAgentId() != null) {
-            FirebaseDatabase.getInstance().getReference()
-                    .child(Constants.DELIVERY_AGENTS_REVIEWS)
-                    .child(mOrder.getDeliveryAgentId())
-                    .child(orderId)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            //If no rating found for this order
-                            if (dataSnapshot.getValue() == null && !askedForRatingBefore) {
-                                //Go to rating fragment where the user could submit his rating
-                                Handler handler = new Handler();
-                                handler.postDelayed(() -> {
-                                    //Go to menu details fragment
-                                    if (getActivity() != null) {
-                                        try {
-                                            askedForRatingBefore = true;
-                                            RatingFragment fragment = RatingFragment.newInstance(mOrder.getDeliveryAgentId(), orderId);
-                                            getActivity().getSupportFragmentManager()
-                                                    .beginTransaction()
-                                                    .setCustomAnimations(R.anim.slide_in_appear, R.anim.slide_in_disappear, R.anim.slide_away_appear, R.anim.slide_away_disappear)
-                                                    .replace(R.id.drawer_container, fragment)
-                                                    .addToBackStack(null)
-                                                    .commitAllowingStateLoss();
-                                        } catch (Exception ignored) {
-                                        }
-                                    }
-                                }, Constants.TIME_ONE_AND_HALF_SECOND);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-        }
-    }*/
 
     private void displayOrderPriceDetails(FireStoreOrder order) {
         try {

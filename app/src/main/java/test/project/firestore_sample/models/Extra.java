@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-import project.iobird.menutiumandroid.controls.Constants;
+import test.project.firestore_sample.controls.Constants;
 
 @SuppressWarnings("SameParameterValue")
 public class Extra implements Serializable {
@@ -25,7 +25,7 @@ public class Extra implements Serializable {
     @Expose
     private Integer max;
     @Expose
-    private int quantity;
+    private Integer quantity;
     @Expose
     @SerializedName("is_sub_extra")
     private Boolean isSubExtra;
@@ -75,11 +75,11 @@ public class Extra implements Serializable {
         this.row = row;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

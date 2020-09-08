@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import project.iobird.menutiumandroid.controls.Constants;
+import test.project.firestore_sample.controls.Constants;
 
 @SuppressWarnings("SameParameterValue")
 public class Option implements Serializable, Comparable<Option>{
@@ -81,22 +81,22 @@ public class Option implements Serializable, Comparable<Option>{
     public void setRow(Integer row) {
         this.row = row;
     }
-
+    @com.google.firebase.database.PropertyName("min_quantity")
     @PropertyName("min_quantity")
     public Integer getMinQuantity() {
         return minQuantity;
     }
-
+    @com.google.firebase.database.PropertyName("min_quantity")
     @PropertyName("min_quantity")
     public void setMinQuantity(Integer minQuantity) {
         this.minQuantity = minQuantity;
     }
-
+    @com.google.firebase.database.PropertyName("max_quantity")
     @PropertyName("max_quantity")
     public Integer getMaxQuantity() {
         return maxQuantity;
     }
-
+    @com.google.firebase.database.PropertyName("max_quantity")
     @PropertyName("max_quantity")
     public void setMaxQuantity(Integer maxQuantity) {
         this.maxQuantity = maxQuantity;
