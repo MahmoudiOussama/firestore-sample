@@ -2,8 +2,9 @@
 
 This project is created for testing purposes.
 
-This project runs a Firestore realtime query which should be triggered each time the **document** is updated.
-
+This Android app runs a Firestore realtime query which should be triggered each time the **document** is updated.
+To update the firestore document, i created a web app only for this purpose, see below link : 
+[Web app for updating Firestore documents (status field)](https://my-first-project-d447c.web.app)
 
 In this First screen : 
   * Iam updating the **status** field within "test_order" document.
