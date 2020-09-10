@@ -8,9 +8,7 @@
     <color name="colorSecondary">#ef8b06</color>
     <color name="colorSecondaryDark">#ef8b06</color>
     <color name="colorAccent">#787878</color>
-
     <color name="light_gray">#d1d1d1</color>
-
     <color name="progress_bar_color1">#bdc3c7</color>
     <color name="progress_bar_color2">#838383</color>
 </resources>

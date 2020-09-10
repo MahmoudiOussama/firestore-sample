@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/status_received"
+        android:title="@string/status_received"
+        app:showAsAction="never" />
+    <item android:id="@+id/status_canceled"
+        android:title="@string/status_canceled"
+        app:showAsAction="never" />
+    <item android:id="@+id/status_in_progress"
+        android:title="@string/status_in_progress"
+        app:showAsAction="never" />
+    <item android:id="@+id/status_validated"
+        android:title="@string/status_validated"
+        app:showAsAction="never" />
+    <item android:id="@+id/status_picked"
+        android:title="@string/status_picked"
+        app:showAsAction="never" />
+    <item android:id="@+id/status_delivered"
+        android:title="@string/status_delivered"
+        app:showAsAction="never" />
+    <item android:id="@+id/status_returned"
+        android:title="@string/status_returned"
+        app:showAsAction="never" />
+</menu>

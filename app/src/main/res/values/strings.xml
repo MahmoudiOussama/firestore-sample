@@ -25,7 +25,6 @@
     <string name="order_total_price">Net price</string>
     <string name="cannot_cancel_order">Cannot cancel order</string>
     <string name="no_thanks">No, thanks</string>
-
     <string name="image_description">image</string>
     <string name="order_number"># %1$d</string>
     <string name="Integer" translatable="false">%d</string>
@@ -41,6 +40,15 @@
     <string name="yes_call">Call</string>
     <string name="cancel_call">Cancel</string>
     <string name="needs_sim_card">We couldn\'t detect a SIM card.</string>
+    <string name="status_received">received</string>
+    <string name="status_canceled">canceled</string>
+    <string name="status_in_progress">in_progress</string>
+    <string name="status_validated">validated</string>
+    <string name="status_picked" >picked</string>
+    <string name="status_delivered">delivered</string>
+    <string name="status_returned">returned</string>
+    <string name="status_successfully_sent">Status Successfully sent</string>
+    <string name="status_failed_tobe_sent">Failed to send status</string>
 
     <string-array name="vehicles">
         <item>not identified</item>

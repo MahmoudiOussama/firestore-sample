@@ -4,7 +4,11 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -32,8 +36,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.MetadataChanges;
 
 import java.util.Date;
 import java.util.Objects;
@@ -84,6 +90,7 @@ public class OrderDetailsFragment extends Fragment
     private TextView buttonContactSupport, buttonCancelOrder, buttonTrackOrder;
     private int orderNumber, deliveryTime = 90;
     private ListenerRegistration orderRealtimeListener;
+    private int count = 0;
 
     public static OrderDetailsFragment newInstance(String storeId, String orderId, String storeName, int orderNumber) {
         OrderDetailsFragment fragment = new OrderDetailsFragment();
@@ -113,6 +120,7 @@ public class OrderDetailsFragment extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
         savedState = savedInstanceState;
         buttonCancelOrder = view.findViewById(R.id.button_cancel_order);
         buttonContactSupport = view.findViewById(R.id.button_support);
@@ -316,17 +324,27 @@ public class OrderDetailsFragment extends Fragment
                     e.printStackTrace();
                 }
             }
+            count = 0;
             firstTimeOrderListener = true;
-            orderRealtimeListener = Constants.getFireStoreInstance().collection(Constants.COLLECTION_ORDERS)
+            orderRealtimeListener = Constants.getFireStoreInstance()
+                    .collection(Constants.COLLECTION_ORDERS)
                     .document(orderId)
-                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    .addSnapshotListener(MetadataChanges.EXCLUDE, new EventListener<DocumentSnapshot>() {
                         @Override
-                        public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException exception) {
+                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot,
+                                            @Nullable FirebaseFirestoreException e) {
                             try {
                                 if (progressBar.getVisibility() == View.VISIBLE) {
                                     progressBar.setVisibility(View.GONE);
                                 }
                             } catch (Exception ex) {}
+
+                            if (e != null) {
+                                Log.w("testing", "Listen failed.", e);
+                                return;
+                            }
+                            count++;
+                            Log.d("testing", "Firestore onEvent triggered : "+count);
                             if (documentSnapshot != null && documentSnapshot.exists()) {
                                 String previousStatus = (mOrder != null && mOrder.getStatus() != null) ? mOrder.getStatus() : null;
                                 mOrder = documentSnapshot.toObject(FireStoreOrder.class);
@@ -492,17 +510,19 @@ public class OrderDetailsFragment extends Fragment
                                         } else {
                                             buttonContactSupport.setVisibility(View.VISIBLE);
                                         }*/
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        FirebaseCrashlytics.getInstance().recordException(e);
+                                    } catch (Exception ex) {
+                                        Log.w("testing", "Firestore onEvent crashed : ", ex);
+                                        ex.printStackTrace();
+                                        FirebaseCrashlytics.getInstance().recordException(ex);
                                     }
                                 }
                             }
                             firstTimeOrderListener = false;
                         }
                     });
-        } catch (Exception e) {
-            FirebaseCrashlytics.getInstance().recordException(e);
+        } catch (Exception exx) {
+            Log.w("testing", "Firestore query crashed : ", exx);
+            FirebaseCrashlytics.getInstance().recordException(exx);
         }
     }
 
@@ -923,6 +943,42 @@ public class OrderDetailsFragment extends Fragment
             }
         } catch (Exception exception) {
             FirebaseCrashlytics.getInstance().recordException(exception);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.statuses_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getTitle() != null) {
+            updateOrderStatusInFireStore(item.getTitle().toString());
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void updateOrderStatusInFireStore(String newStatus) {
+        if (!TextUtils.isEmpty(orderId)) {
+            FirebaseFirestore.getInstance()
+                    .collection(Constants.COLLECTION_ORDERS)
+                    .document(orderId)
+                    .update("status", newStatus)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                ((MainActivity)getActivity()).displayMessage(R.string.status_successfully_sent, android.R.color.holo_green_dark, Constants.TIME_ONE_SECOND);
+                            } else {
+                                ((MainActivity)getActivity()).displayMessage(R.string.status_failed_tobe_sent, android.R.color.holo_red_light, Constants.TIME_ONE_SECOND);
+                            }
+                        }
+                    });
+        } else {
+            ((MainActivity)getActivity()).displayMessage(R.string.status_failed_tobe_sent, android.R.color.holo_red_light, Constants.TIME_ONE_SECOND);
         }
     }
 }

@@ -1,13 +1,5 @@
 package test.project.firestore_sample;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import test.project.firestore_sample.controls.Constants;
-import test.project.firestore_sample.controls.OnSingleClickListener;
-import test.project.firestore_sample.models.FireStoreOrder;
-import test.project.firestore_sample.models.UserProfile;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -22,12 +14,20 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import test.project.firestore_sample.controls.Constants;
+import test.project.firestore_sample.controls.OnSingleClickListener;
+import test.project.firestore_sample.models.FireStoreOrder;
+import test.project.firestore_sample.models.UserProfile;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private Runnable mRunnable;
     private Handler mHandler;
     public static long timeDifferenceFromServer;
-    private AppCompatButton trackOrderBtn1, trackOrderBtn2;
     private Gson gson;
 
     @Override
@@ -52,9 +51,7 @@ public class MainActivity extends AppCompatActivity {
         String whiteList = "logcat -P '" + pid + "'";
         try {
             Runtime.getRuntime().exec(whiteList).waitFor();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -68,9 +65,11 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
         messageForTheUser = findViewById(R.id.message_for_user);
         fireStoreQueryTriggerCount = findViewById(R.id.counter);
-        trackOrderBtn1 = findViewById(R.id.trackOrderBtn);
-        trackOrderBtn2 = findViewById(R.id.trackOrderBtn2);
-        gson = new Gson();
+        AppCompatButton trackOrderBtn1 = findViewById(R.id.trackOrderBtn);
+        AppCompatButton trackOrderBtn2 = findViewById(R.id.trackOrderBtn2);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("MMM d, yyyy HH:mm:ss");
+        gson = gsonBuilder.create();
 
         trackOrderBtn1.setOnClickListener(new OnSingleClickListener() {
             @Override

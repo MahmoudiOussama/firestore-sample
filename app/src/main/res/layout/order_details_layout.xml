@@ -17,7 +17,6 @@
         android:layout_alignParentBottom="true"
         android:weightSum="3">
 
-
         <TextView
             android:id="@+id/button_cancel_order"
             android:layout_width="0dp"
@@ -28,7 +27,8 @@
             android:layout_marginBottom="@dimen/padding_10"
             android:gravity="center"
             android:layout_weight="1"
-            android:drawableTop="@drawable/cancel_order"/>
+            android:drawableTop="@drawable/cancel_order"
+            android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/button_track_order"
@@ -52,7 +52,8 @@
             android:layout_marginBottom="@dimen/padding_10"
             android:gravity="center"
             android:layout_weight="1"
-            android:drawableTop="@drawable/support"/>
+            android:drawableTop="@drawable/support"
+            android:visibility="invisible"/>
 
     </LinearLayout>
 
