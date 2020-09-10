@@ -14,6 +14,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.gson.Gson;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         calculateTimeDifference();
 
+        FirebaseFirestore.setLoggingEnabled(true);
         progressBar = findViewById(R.id.progress_bar);
         messageForTheUser = findViewById(R.id.message_for_user);
         fireStoreQueryTriggerCount = findViewById(R.id.counter);
