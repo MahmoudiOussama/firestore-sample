@@ -40,6 +40,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.MetadataChanges;
+import com.google.firebase.firestore.Source;
 
 import java.util.Date;
 import java.util.Objects;
@@ -53,6 +54,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import test.project.firestore_sample.adapters.CartAdapter;
 import test.project.firestore_sample.controls.Constants;
 import test.project.firestore_sample.controls.OnSingleClickListener;
@@ -91,6 +93,7 @@ public class OrderDetailsFragment extends Fragment
     private int orderNumber, deliveryTime = 90;
     private ListenerRegistration orderRealtimeListener;
     private int count = 0;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public static OrderDetailsFragment newInstance(String storeId, String orderId, String storeName, int orderNumber) {
         OrderDetailsFragment fragment = new OrderDetailsFragment();
@@ -122,6 +125,8 @@ public class OrderDetailsFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
         savedState = savedInstanceState;
+        firstTimeOrderListener = true;
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         buttonCancelOrder = view.findViewById(R.id.button_cancel_order);
         buttonContactSupport = view.findViewById(R.id.button_support);
         buttonTrackOrder = view.findViewById(R.id.button_track_order);
@@ -140,6 +145,17 @@ public class OrderDetailsFragment extends Fragment
             }
             progressBar.setVisibility(View.VISIBLE);
         }
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getOrderFromDatabase();
+            }
+        });
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
 
         buttonCancelOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -325,29 +341,37 @@ public class OrderDetailsFragment extends Fragment
                 }
             }
             count = 0;
-            firstTimeOrderListener = true;
-            orderRealtimeListener = Constants.getFireStoreInstance()
+            /*orderRealtimeListener =*/ Constants.getFireStoreInstance()
                     .collection(Constants.COLLECTION_ORDERS)
                     .document(orderId)
-                    .addSnapshotListener(MetadataChanges.EXCLUDE, new EventListener<DocumentSnapshot>() {
+                    .get(Source.SERVER)
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    /*.addSnapshotListener(MetadataChanges.EXCLUDE, new EventListener<DocumentSnapshot>() {
                         @Override
                         public void onEvent(@Nullable DocumentSnapshot documentSnapshot,
-                                            @Nullable FirebaseFirestoreException e) {
+                                            @Nullable FirebaseFirestoreException e) {*/
                             try {
+                                if (swipeRefreshLayout != null) {
+                                    swipeRefreshLayout.setRefreshing(false);
+                                }
                                 if (progressBar.getVisibility() == View.VISIBLE) {
                                     progressBar.setVisibility(View.GONE);
                                 }
                             } catch (Exception ex) {}
 
-                            if (e != null) {
-                                Log.w("testing", "Listen failed.", e);
+                            if (task.getException() != null) {
+                                Log.w("testing", "Listen failed.", task.getException());
                                 return;
                             }
                             count++;
                             Log.d("testing", "Firestore onEvent triggered : "+count);
-                            if (documentSnapshot != null && documentSnapshot.exists()) {
+                            if (task.getResult().exists()) {
+                            //if (documentSnapshot != null && documentSnapshot.exists()) {
                                 String previousStatus = (mOrder != null && mOrder.getStatus() != null) ? mOrder.getStatus() : null;
-                                mOrder = documentSnapshot.toObject(FireStoreOrder.class);
+                                mOrder = task.getResult().toObject(FireStoreOrder.class);
+                                //mOrder = documentSnapshot.toObject(FireStoreOrder.class);
                                 if (mOrder != null && mOrder.getStatus() != null) {
                                     try {
                                         if (firstTimeOrderListener) {
