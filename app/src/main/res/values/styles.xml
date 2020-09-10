@@ -5,7 +5,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
-        <item name="titleTextColor">@color/colorPrimaryDark</item>
+        <item name="titleTextColor">@color/white</item>
         <item name="android:actionBarStyle">@style/AppTheme.ActionBarStyle</item>
         <item name="android:itemBackground">@color/white</item>
     </style>
